@@ -60,6 +60,22 @@ public class QuickSearchFragment extends Fragment {
         nameTextView = (TextView)view.findViewById(R.id.companyName);
         domainTextView= (TextView)view.findViewById(R.id.companyDomain);
         imageView = (ImageView)view.findViewById(R.id.quickSearchImage);
+        setupSearchView();
+        return view;
+    }
+    private static ArrayList<CompanySuggestion> createSuggestions(ArrayList<Company> companies){
+        ArrayList<CompanySuggestion> suggestions = new ArrayList<>();
+
+        for (Company company: companies) {
+            suggestions.add(new CompanySuggestion(company));
+        }
+
+        return suggestions;
+
+
+    }
+
+    private void setupSearchView(){
 
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
@@ -68,10 +84,7 @@ public class QuickSearchFragment extends Fragment {
                     @Override
                     public void onDone(ArrayList<Company> result) {
 
-                        searchView.swapSuggestions(createSuggestions(result));
-//                        Glide.with(getContext()).load(result[0].getLogoURL()).into(imageView);
-//                        nameTextView.setText(result[0].getName());
-//                        domainTextView.setText(result[0].getDomain());
+                        searchView.swapSuggestions(createSuggestions(result));;
                     }
                 });
             }
@@ -125,17 +138,5 @@ public class QuickSearchFragment extends Fragment {
         });
 
         searchView.setSearchHint("Search Image");
-        return view;
-    }
-    private static ArrayList<CompanySuggestion> createSuggestions(ArrayList<Company> companies){
-        ArrayList<CompanySuggestion> suggestions = new ArrayList<>();
-
-        for (Company company: companies) {
-            suggestions.add(new CompanySuggestion(company));
-        }
-
-        return suggestions;
-
-
     }
 }

@@ -32,7 +32,6 @@ public class ListViewFragment extends Fragment {
     SearchView searchView;
 
     public ListViewFragment() {
-        // Required empty public constructor
     }
 
 
@@ -44,7 +43,6 @@ public class ListViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_view, container, false);
         companyRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         final CompanyAdapter companyAdapter = new CompanyAdapter(Glide.with(this));
@@ -73,27 +71,6 @@ public class ListViewFragment extends Fragment {
                 return false;
             }
         });
-//        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
-//            @Override
-//            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-//
-//            }
-//
-//            @Override
-//            public void onSearchAction(String currentQuery) {
-//                Log.d("hey", "up");
-//                CompaniesAPI.searchCompany(currentQuery, getContext()).done(new DoneCallback<ArrayList<Company>>() {
-//                    @Override
-//                    public void onDone(ArrayList<Company> result) {
-//                        companyAdapter.setList(result);
-//                        companyAdapter.notifyDataSetChanged();
-//                        Log.d("hey","down");
-//                    }
-//                });
-//            }
-//        });
-
-
 
         return view;
     }

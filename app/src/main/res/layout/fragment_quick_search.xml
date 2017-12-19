@@ -8,19 +8,18 @@
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/quickSearch"
-        android:queryHint="Search Image"
-        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:iconifiedByDefault="false"
-        android:searchIcon="@null"
+        android:layout_marginTop="40dp"
+        android:background="#fff"
         android:closeIcon="@drawable/clear_search"
-        app:floatingSearch_leftActionMode="noLeftAction"
 
         android:elevation="2dp"
-        android:background="#fff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:queryHint="Search Image"
+        android:searchIcon="@null"
+        app:floatingSearch_leftActionMode="noLeftAction" />
 
     <LinearLayout
         android:layout_width="match_parent"
