@@ -3,18 +3,37 @@ package dlc.androidtask.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.bumptech.glide.Glide;
+
+import org.jdeferred.DoneCallback;
+
+import java.util.ArrayList;
+
+import dlc.androidtask.Network.CompaniesAPI;
 import dlc.androidtask.R;
+import dlc.androidtask.models.Company;
+import dlc.androidtask.models.CompanySuggestion;
+
+import static dlc.androidtask.Network.CompaniesAPI.searchCompany;
 
 public class QuickSearchFragment extends Fragment {
 
-    SearchView searchView;
+    FloatingSearchView searchView;
+    ImageView imageView;
+    TextView nameTextView, domainTextView;
     public QuickSearchFragment() {
         // Required empty public constructor
     }
@@ -32,23 +51,54 @@ public class QuickSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_quick_search, container, false);
-        searchView = (SearchView)view.findViewById(R.id.quickSearch);
-        searchView.setQueryHint("Search Image");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = (FloatingSearchView) view.findViewById(R.id.quickSearch);
+        nameTextView = (TextView)view.findViewById(R.id.companyName);
+        domainTextView= (TextView)view.findViewById(R.id.companyDomain);
+        imageView = (ImageView)view.findViewById(R.id.quickSearchImage);
 
+        searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getContext(), query, Toast.LENGTH_LONG).show();
-                return false;
-            }
+            public void onSearchTextChanged(String oldQuery, String newQuery) {
+                CompaniesAPI.searchCompany(newQuery, getContext()).done(new DoneCallback<ArrayList<Company>>() {
+                    @Override
+                    public void onDone(ArrayList<Company> result) {
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Toast.makeText(getContext(), newText, Toast.LENGTH_LONG).show();
-                return false;
+                        searchView.swapSuggestions(createSuggestions(result));
+//                        Glide.with(getContext()).load(result[0].getLogoURL()).into(imageView);
+//                        nameTextView.setText(result[0].getName());
+//                        domainTextView.setText(result[0].getDomain());
+                    }
+                });
             }
         });
+        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+                Glide.with(getContext()).load(((CompanySuggestion)searchSuggestion).getLogo()).into(imageView);
+                nameTextView.setText(((CompanySuggestion)searchSuggestion).getCompany());
+                domainTextView.setText(((CompanySuggestion)searchSuggestion).getDomain());
+                searchView.clearSuggestions();
+                searchView.clearQuery();
+                searchView.clearSearchFocus();
+            }
+            @Override
+            public void onSearchAction(String currentQuery) {
+
+            }
+        });
+
+        searchView.setSearchHint("Search Image");
         return view;
     }
+    private static ArrayList<CompanySuggestion> createSuggestions(ArrayList<Company> companies){
+        ArrayList<CompanySuggestion> suggestions = new ArrayList<>();
 
+        for (Company company: companies) {
+            suggestions.add(new CompanySuggestion(company));
+        }
+
+        return suggestions;
+
+
+    }
 }

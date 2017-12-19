@@ -1,11 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/whitish"
     android:layout_height="match_parent"
     tools:context="dlc.androidtask.fragments.QuickSearchFragment">
 
-    <SearchView
+    <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/quickSearch"
         android:queryHint="Search Image"
         android:layout_marginTop="40dp"
@@ -14,6 +15,7 @@
         android:iconifiedByDefault="false"
         android:searchIcon="@null"
         android:closeIcon="@drawable/clear_search"
+        app:floatingSearch_leftActionMode="noLeftAction"
 
         android:elevation="2dp"
         android:background="#fff"
@@ -49,7 +51,7 @@
 
 
         <TextView
-            android:id="@+id/CompanyDomain"
+            android:id="@+id/companyDomain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
