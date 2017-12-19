@@ -1,6 +1,9 @@
 package dlc.androidtask.fragments;
 
+import android.animation.Animator;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -16,6 +19,8 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 
 import org.jdeferred.DoneCallback;
@@ -71,16 +76,48 @@ public class QuickSearchFragment extends Fragment {
                 });
             }
         });
+
+
         searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-                Glide.with(getContext()).load(((CompanySuggestion)searchSuggestion).getLogo()).into(imageView);
+                final DrawableRequestBuilder request = Glide.with(getContext()).load(((CompanySuggestion)searchSuggestion).getLogo()).dontAnimate().fitCenter();
+
+                imageView.setRotationY(0f);
+                imageView.animate().rotationY(90f).setListener(new Animator.AnimatorListener()
+                {
+
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        request.into(imageView);
+                        imageView.setRotationY(270f);
+                        imageView.animate().rotationY(360f).setListener(null);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+                    }
+                });
+
                 nameTextView.setText(((CompanySuggestion)searchSuggestion).getCompany());
                 domainTextView.setText(((CompanySuggestion)searchSuggestion).getDomain());
                 searchView.clearSuggestions();
                 searchView.clearQuery();
                 searchView.clearSearchFocus();
             }
+
             @Override
             public void onSearchAction(String currentQuery) {
 
